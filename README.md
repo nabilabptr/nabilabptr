@@ -1,4 +1,4 @@
-Jurnal
+Komparasi Algoritma Klasifikasi Web Phising
 ================
 Nabila Bianca Putri
 
