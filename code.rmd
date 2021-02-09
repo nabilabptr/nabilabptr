@@ -14,12 +14,12 @@ library(knitr)
 # Data
 ```{r message=FALSE}
 data <- read_csv("PhishingData.csv")
-head(data)
+kable(head(data))
 ```
 
 ```{r}
 dataFix <- data[,-1]
-head(dataFix)
+kabble(head(dataFix))
 str(dataFix)
 ```
 
