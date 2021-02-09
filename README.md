@@ -28,20 +28,17 @@ kable(head(data))
 
 ``` r
 dataFix <- data[,-1]
-head(dataFix)
+kable(head(dataFix))
 ```
 
-    ## # A tibble: 6 x 10
-    ##     SFH popUpWidnow SSLfinal_State Request_URL URL_of_Anchor web_traffic
-    ##   <dbl>       <dbl>          <dbl>       <dbl>         <dbl>       <dbl>
-    ## 1     1          -1              1          -1            -1           1
-    ## 2    -1          -1             -1          -1            -1           0
-    ## 3     1          -1              0           0            -1           0
-    ## 4     1           0              1          -1            -1           0
-    ## 5    -1          -1              1          -1             0           0
-    ## 6    -1          -1              1          -1            -1           1
-    ## # ... with 4 more variables: URL_Length <dbl>, age_of_domain <dbl>,
-    ## #   having_IP_Address <dbl>, Result <dbl>
+| SFH | popUpWidnow | SSLfinal\_State | Request\_URL | URL\_of\_Anchor | web\_traffic | URL\_Length | age\_of\_domain | having\_IP\_Address | Result |
+| --: | ----------: | --------------: | -----------: | --------------: | -----------: | ----------: | --------------: | ------------------: | -----: |
+|   1 |         \-1 |               1 |          \-1 |             \-1 |            1 |           1 |               1 |                   0 |      0 |
+| \-1 |         \-1 |             \-1 |          \-1 |             \-1 |            0 |           1 |               1 |                   1 |      1 |
+|   1 |         \-1 |               0 |            0 |             \-1 |            0 |         \-1 |               1 |                   0 |      1 |
+|   1 |           0 |               1 |          \-1 |             \-1 |            0 |           1 |               1 |                   0 |      0 |
+| \-1 |         \-1 |               1 |          \-1 |               0 |            0 |         \-1 |               1 |                   0 |      1 |
+| \-1 |         \-1 |               1 |          \-1 |             \-1 |            1 |           0 |             \-1 |                   0 |      1 |
 
 ``` r
 str(dataFix)
