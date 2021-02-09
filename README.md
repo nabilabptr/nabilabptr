@@ -1,6 +1,6 @@
 Komparasi Algoritma Klasifikasi Web Phising
 ================
-Nabila Bianca Putri
+Author : Nabila Bianca Putri
 
 # Library
 
