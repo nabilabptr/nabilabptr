@@ -1,0 +1,168 @@
+---
+author: "Nabila Bianca Putri"
+output: github_document
+---
+
+
+# Library
+```{r message=FALSE, warning=FALSE}
+library(readr)
+library(dplyr)
+library(knitr)
+```
+
+# Data
+```{r message=FALSE}
+data <- read_csv("PhishingData.csv")
+head(data)
+```
+
+```{r}
+dataFix <- data[,-1]
+head(dataFix)
+str(dataFix)
+```
+
+```{r}
+dataFix$SFH <- as.factor(dataFix$SFH)
+dataFix$popUpWidnow <- as.factor(dataFix$popUpWidnow)
+dataFix$SSLfinal_State <- as.factor(dataFix$SSLfinal_State)
+dataFix$Request_URL <- as.factor(dataFix$Request_URL)
+dataFix$URL_Length <- as.factor(dataFix$URL_Length)
+dataFix$URL_of_Anchor <- as.factor(dataFix$URL_of_Anchor)
+dataFix$web_traffic <- as.factor(dataFix$web_traffic)
+dataFix$age_of_domain <- as.factor(dataFix$age_of_domain)
+dataFix$having_IP_Address <- as.factor(dataFix$having_IP_Address)
+dataFix$Result <- as.factor(dataFix$Result)
+
+dataFix$Result <- recode(dataFix$Result, '-1'="legitimate", '0'="suspicious", '1'="phishy")
+
+
+str(dataFix)
+```
+
+
+```{r}
+#cek apakah terdapat missing value
+sapply(dataFix, function(x) sum(is.na(x)))
+```
+
+
+```{r}
+#Split data
+set.seed(123)
+sampel <- sample(2,nrow(dataFix),replace = T, prob = c(0.8,0.2))
+trainingdat <- dataFix[sampel==1, ]
+testingdat <- dataFix[sampel==2, ]
+print(paste("Jumlah train data :", nrow(trainingdat)))
+print(paste("Jumlah test data :", nrow(testingdat)))
+```
+
+# Algoritma Klasifikasi
+
+## Naive Bayes
+
+```{r message=FALSE, warning=FALSE}
+library(naivebayes)
+library(psych)
+library(caret)
+```
+
+
+```{r}
+modelnaiv <- naive_bayes(Result~.,data=trainingdat, laplace = T)
+modelnaiv
+```
+
+```{r}
+summary(modelnaiv)
+```
+
+```{r}
+prediksiNB <- predict(modelnaiv, testingdat)
+conf_NB <- confusionMatrix(table(prediksiNB,testingdat$Result))
+conf_NB
+```
+
+
+## Random Forest
+
+```{r message=FALSE, warning=FALSE}
+library(randomForest)
+library(caret)
+library(psych)
+```
+
+
+```{r}
+set.seed(123)   
+model <- randomForest(Result~., data=trainingdat)
+model
+```
+
+
+```{r}
+prediksiRF <- predict(model, testingdat)
+conf_RF <- confusionMatrix(table(prediksiRF, testingdat$Result))
+conf_RF
+```
+
+
+## Decision Tree
+
+```{r message=FALSE, warning=FALSE}
+library(party)
+library(psych)
+library(caret)
+```
+
+```{r fig.width=17, fig.height=8}
+pohon <- ctree(Result~., data=trainingdat)
+plot(pohon)
+```
+
+```{r}
+prediksiDT <- predict(pohon, testingdat)
+conf_DT <- confusionMatrix(table(prediksiDT,testingdat$Result))
+conf_DT
+```
+
+## SVM
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(e1071)
+library(caret)
+```
+
+
+```{r}
+modelSVM <- svm(Result~., data=dataFix)
+summary(modelSVM)
+```
+
+```{r}
+prediksiSVM <- predict(modelSVM, dataFix)
+conf_SVM <- confusionMatrix(table(Predicted = prediksiSVM, Actual=dataFix$Result))
+conf_SVM
+```
+
+# Hasil
+```{r}
+data.frame(accuracy = c(paste(round((conf_NB$overall[1])*100,2), "%"),
+                        paste(round((conf_RF$overall[1])*100,2), "%"),
+                        paste(round((conf_DT$overall[1])*100,2), "%"),
+                        paste(round((conf_SVM$overall[1])*100,2), "%")),
+           precision = c(paste(round((conf_NB$byClass[3,3])*100,2), "%"),
+                         paste(round((conf_RF$byClass[3,3])*100,2), "%"),
+                         paste(round((conf_DT$byClass[3,3])*100,2), "%"),
+                         paste(round((conf_SVM$byClass[3,3])*100,2), "%")),
+           sensitivity = c(paste(round((conf_NB$byClass[3,1])*100,2), "%"),
+                         paste(round((conf_RF$byClass[3,1])*100,2), "%"),
+                         paste(round((conf_DT$byClass[3,1])*100,2), "%"),
+                         paste(round((conf_SVM$byClass[3,1])*100,2), "%"))) %>% 
+   `rownames<-`(c("Naive Bayes", "Random Forest", "Decision Tree", "SVM")) %>%
+  kable()
+```
+
+
