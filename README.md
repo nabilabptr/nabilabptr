@@ -14,20 +14,17 @@ library(knitr)
 
 ``` r
 data <- read_csv("PhishingData.csv")
-head(data)
+kable(head(data))
 ```
 
-    ## # A tibble: 6 x 11
-    ##      id   SFH popUpWidnow SSLfinal_State Request_URL URL_of_Anchor web_traffic
-    ##   <dbl> <dbl>       <dbl>          <dbl>       <dbl>         <dbl>       <dbl>
-    ## 1     1     1          -1              1          -1            -1           1
-    ## 2     2    -1          -1             -1          -1            -1           0
-    ## 3     3     1          -1              0           0            -1           0
-    ## 4     4     1           0              1          -1            -1           0
-    ## 5     5    -1          -1              1          -1             0           0
-    ## 6     6    -1          -1              1          -1            -1           1
-    ## # ... with 4 more variables: URL_Length <dbl>, age_of_domain <dbl>,
-    ## #   having_IP_Address <dbl>, Result <dbl>
+| id | SFH | popUpWidnow | SSLfinal\_State | Request\_URL | URL\_of\_Anchor | web\_traffic | URL\_Length | age\_of\_domain | having\_IP\_Address | Result |
+| -: | --: | ----------: | --------------: | -----------: | --------------: | -----------: | ----------: | --------------: | ------------------: | -----: |
+|  1 |   1 |         \-1 |               1 |          \-1 |             \-1 |            1 |           1 |               1 |                   0 |      0 |
+|  2 | \-1 |         \-1 |             \-1 |          \-1 |             \-1 |            0 |           1 |               1 |                   1 |      1 |
+|  3 |   1 |         \-1 |               0 |            0 |             \-1 |            0 |         \-1 |               1 |                   0 |      1 |
+|  4 |   1 |           0 |               1 |          \-1 |             \-1 |            0 |           1 |               1 |                   0 |      0 |
+|  5 | \-1 |         \-1 |               1 |          \-1 |               0 |            0 |         \-1 |               1 |                   0 |      1 |
+|  6 | \-1 |         \-1 |               1 |          \-1 |             \-1 |            1 |           0 |             \-1 |                   0 |      1 |
 
 ``` r
 dataFix <- data[,-1]
@@ -353,7 +350,7 @@ pohon <- ctree(Result~., data=trainingdat)
 plot(pohon)
 ```
 
-![](jurnal_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](code_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 ``` r
 prediksiDT <- predict(pohon, testingdat)
